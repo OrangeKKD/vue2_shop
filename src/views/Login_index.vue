@@ -64,7 +64,7 @@ export default {
           const { data: res } = await loginAPI(this.loginForm)
           if (res.meta.status !== 200) this.$message.error(res.meta.msg)
           else {
-            this.$message.success(res.meta.msg)
+            // this.$message.success(res.meta.msg)
             // 存储token到sessionStorage
             window.sessionStorage.setItem('token', res.data.token)
             this.$router.push('/home')
