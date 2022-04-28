@@ -40,7 +40,7 @@
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="edit(scope.row)"></el-button>
             <el-button type="danger" icon="el-icon-delete" size="mini" @click="del(scope.row)"></el-button>
             <el-tooltip class="item" effect="dark" content="分配权限" placement="top">
-              <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+              <el-button type="warning" icon="el-icon-setting" size="mini" @click="allotRole(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -54,15 +54,27 @@
 
     <!-- 编辑用户按钮的对话弹窗 -->
     <user-dialogue :visible="visibleEdit" :title="'编辑用户'" :editForm="userInfo" :methods="'edit'" @close="closeDlg" @reload="getUserList"></user-dialogue>
+    <!-- 分配角色对话弹框 -->
+    <el-dialog title="分配角色" :visible.sync="visibleAuthoize" width="30%">
+      <p>用户名：{{ userInfo.username }}</p>
+      <p>角色名：{{ userInfo.role_name }}</p>
+      <span>角色：<select-base :options="roleList" :placeholder="'请选择要分配的角色'" @selected="getSelected"></select-base></span>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="visibleAuthoize = false">取 消</el-button>
+        <el-button type="primary" @click="submitAllotRole">提交</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { userListAPI, changeStatusAPI, deleteUserAPI } from '@/api'
+import { userListAPI, changeStatusAPI, deleteUserAPI, getRolesAPI, allotRoleAPI } from '@/api'
 import PaginationIndex from '@/components/menu/PaginationIndex.vue'
 import UserDialogue from '@/components/menu/UserDialogue.vue'
+import SelectBase from '@/components/menu/SelectBase.vue'
 export default {
-  components: { PaginationIndex, UserDialogue },
+  components: { PaginationIndex, UserDialogue, SelectBase },
   name: 'UserManange',
   data() {
     return {
@@ -77,10 +89,13 @@ export default {
       totalPage: 0,
       visibleAdd: false,
       visibleEdit: false,
+      visibleAuthoize: false,
       // 编辑的用户信息 默认是空 可用来判断打开的是添加还是编辑
-      userInfo: null,
+      userInfo: {},
       // 打开对话框的方式（添加用户还是编辑用户 add/edit）
-      methods: null
+      methods: null,
+      roleList: [],
+      selectedRoleId: ''
     }
   },
   created() {
@@ -139,6 +154,27 @@ export default {
         // console.log(res)
         if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
         this.$message.success(res.meta.msg)
+        this.getUserList()
+      })
+    },
+    // 点击分配权限
+    allotRole(row) {
+      this.userInfo = row
+      this.visibleAuthoize = true
+      // this.$getList(getRolesByIdAPI, row.id, (res) => {
+      //   console.log(res)
+      // })
+      // 获取所有角色列表
+      this.$getList(getRolesAPI, null, (res) => {
+        this.roleList = res
+      })
+    },
+    getSelected(val) {
+      this.selectedRoleId = val
+    },
+    submitAllotRole() {
+      this.$submitInfo(allotRoleAPI, { id: this.userInfo.id, params: { rid: this.selectedRoleId } }, 200, (res) => {
+        this.visibleAuthoize = false
         this.getUserList()
       })
     }

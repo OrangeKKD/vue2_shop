@@ -16,7 +16,7 @@
         <el-input v-model="form.email" autocomplete="on"></el-input>
       </el-form-item>
     </el-form>
-    <el-form :model="form" :rules="userInfoRules" ref="userRef" v-else>
+    <el-form :model="form" :rules="userInfoRules" ref="userRef" v-else-if="methods === 'edit'">
       <el-form-item label="用户名称" :label-width="formLabelWidth">
         <el-input v-model="form.username" autocomplete="off" disabled></el-input>
       </el-form-item>
@@ -27,6 +27,7 @@
         <el-input v-model="form.email" autocomplete="on" clearable></el-input>
       </el-form-item>
     </el-form>
+
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取 消</el-button>
       <el-button type="primary" @click="submitForm(methods)">提交</el-button>
@@ -77,7 +78,8 @@ export default {
       default: false
     },
     methods: {
-      type: String
+      type: String,
+      default: ''
     },
     editForm: {
       type: Object,

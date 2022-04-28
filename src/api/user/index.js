@@ -38,3 +38,10 @@ export const editUser = (id, params) => request({
   method: 'PUT',
   data: params
 })
+
+// 分配角色
+export const allotRole = (id, params) => request({
+  url: `users/${id}/role`,
+  data: params,
+  method: 'PUT'
+})
