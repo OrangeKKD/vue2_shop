@@ -18,7 +18,7 @@ exports.install = function(Vue, options) {
       if (res.meta.status === code) {
         Vue.prototype.$message.success(res.meta.msg)
         if (callback) {
-          callback()
+          callback(res.data)
         }
       } else {
         return Vue.prototype.$message.error(res.meta.msg)

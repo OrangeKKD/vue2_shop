@@ -2,6 +2,7 @@ import { login } from './login/login'
 import { menu } from './menu/menu'
 import { userList, changeStatus, addUser, editUser, deleteUser, allotRole } from './user'
 import { getAllRights, getMenuRights, getRoles, addRole, getRolesById, editRole, delRole, authorizeRoles, delRightsforRoles } from './rights'
+import { getCategoryList, addCategory, getParamsList, addParams, editParams, delParams } from '@/api/goods'
 
 export const loginAPI = login
 export const menuAPI = menu
@@ -26,3 +27,11 @@ export const delRoleAPI = delRole
 export const authorizeRolesAPI = authorizeRoles
 // 删除指定角色的权限
 export const delRightsforRolesAPI = delRightsforRoles
+
+// 商品管理
+export const getCategoryListAPI = getCategoryList
+export const addCategoryAPI = addCategory
+export const getParamsListAPI = getParamsList
+export const addParamsAPI = addParams
+export const editParamsAPI = editParams
+export const delParamsAPI = delParams
